@@ -1,0 +1,47 @@
+import requests
+from lxml import html
+import pandas as pd
+
+#Главная страница сайта
+main_page = 'https://skillbox.ru'
+
+#Лист вкладок с главной страницы
+page_list = []
+
+page = requests.get(main_page).content
+html_tree = html.fromstring(page, parser=html.HTMLParser(encoding='utf-8'))
+page_list = html_tree.xpath("//li[@class ='tabs-list__item']//a//@href")
+
+for p in range(len(page_list)):
+    page_list[p] = main_page + page_list[p]
+    
+#Лист курсов
+items_list = []
+
+#Лист ссылок на курсы
+link_list = []
+
+for p in page_list:
+    page = requests.get(p).content
+    html_tree = html.fromstring(page, parser=html.HTMLParser(encoding='utf-8'))
+    for i in html_tree.xpath("//b[@class = 'profession-card__title hover-card__text']"):
+        items_list += [i.text]
+    link_list += html_tree.xpath("//div[@class = 'profession-list']//a//@href")
+
+#Лист описаний курсов
+desc_list = []
+
+for l in link_list:
+    page = requests.get(l).content
+    html_tree = html.fromstring(page, parser=html.HTMLParser(encoding='utf-8'))
+    if html_tree.xpath("//p[@class = 'start-screen__desc']"):
+        desc_list += [html_tree.xpath("//p[@class = 'start-screen__desc']")[0].text]
+
+    else:
+        desc_list += ['Данных нет']
+
+result = pd.DataFrame({
+    'item': items_list,
+    'link': link_list,
+    'desc': desc_list
+})

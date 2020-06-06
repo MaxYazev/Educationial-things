@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Mar  4 19:07:11 2020
-
-@author: User
+Расчет констуркции моста, состоящего из треугольных ферм, методом конечных элементов
 """
 import matplotlib.pyplot as plt
 import numpy as np
 import math
 
 class Point():
-    """Контейнер для точки"""
+    """Контейнер для точки (узлы)"""
     
     def __init__(self, x, y):
         self.x = x
@@ -47,7 +45,9 @@ class Point():
                  markerfacecolor = 'white',)
 
 class Beam():
-    
+    """
+    Балки
+    """
     def __init__(self, point_0:Point, point_1:Point):
         self.points = [point_0, point_1]
         x_0 = self.points[0].x
@@ -115,7 +115,9 @@ class Beam():
         self.points[1].force_y = F_2n[1] + F_2tau[1]
 
 class Bridge():
-    
+    """
+    Мост
+    """
     def __init__(self, list_of_points, list_of_beams):
         
         beams = []

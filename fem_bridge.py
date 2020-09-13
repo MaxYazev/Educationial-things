@@ -340,8 +340,9 @@ def task_3():
         bridge.define_offset()
         bridge.draw()
         bridge.draw_offset(scale = 1000)
-        plt.savefig(fname = 'bridge' + str(i) + '.png')
-        plt.close()
+        plt.show()
+        #plt.savefig(fname = 'bridge' + str(i) + '.png')
+        #plt.close()
 
 task_3()
     
